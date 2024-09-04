@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON整形ツール - オンラインでJSONを簡単に整形・コピー</title>
+    <meta name="description" content="このオンラインツールを使用して、JSONデータを簡単に整形・コピーできます。JSON整形、フォーマット、バリデーション、コピーが無料で行えます。">
+    <meta name="keywords" content="JSON整形, JSON formatter, JSONフォーマッター, JSON validator, JSONバリデーター, JSONコピー">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .button-group {
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #result {
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin-top: 20px;
+            min-height: 100px;
+        }
+        #message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .feature-list, .faq-list, .testimonial-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .feature-item, .faq-item, .testimonial-item {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .faq-question {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .testimonial-author {
+            font-style: italic;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>JSON整形ツール</h1>
+    </header>
+    <main>
+        <p>JSONデータを入力し、「整形」ボタンをクリックしてください。整形された結果をコピーするには「コピー」ボタンを使用してください。</p>
+        <textarea id="input" placeholder="ここにJSONを入力してください"></textarea>
+        <div class="button-group">
+            <button onclick="formatJSON()">整形</button>
+            <button id="copyButton" onclick="copyResult()" disabled>コピー</button>
+        </div>
+        <div id="result"></div>
+        <div id="message"></div>
+
+        <h2>特徴</h2>
+        <ul class="feature-list">
+            <li class="feature-item"><span class="feature-icon">🚀</span>高速で効率的なJSON整形</li>
+            <li class="feature-item"><span class="feature-icon">🔍</span>JSONの構文エラーを検出</li>
+            <li class="feature-item"><span class="feature-icon">📋</span>ワンクリックでフォーマット済みJSONをコピー</li>
+            <li class="feature-item"><span class="feature-icon">🆓</span>完全無料で使用可能</li>
+        </ul>
+
+        <h2>よくある質問</h2>
+        <ul class="faq-list">
+            <li class="faq-item">
+                <div class="faq-question">Q: このツールは安全ですか？</div>
+                <div class="faq-answer">A: はい、このツールは完全にクライアントサイドで動作し、サーバーにデータを送信しません。</div>
+            </li>
+            <li class="faq-item">
+                <div class="faq-question">Q: 大きなJSONファイルも処理できますか？</div>
+                <div class="faq-answer">A: はい、ブラウザの制限内であれば、大きなJSONファイルも処理できます。</div>
+            </li>
+            <li class="faq-item">
+                <div class="faq-question">Q: モバイルデバイスでも使用できますか？</div>
+                <div class="faq-answer">A: はい、このツールはモバイルフレンドリーで、スマートフォンやタブレットでも使用できます。</div>
+            </li>
+        </ul>
+
+        <h2>ユーザーの声</h2>
+        <ul class="testimonial-list">
+            <li class="testimonial-item">
+                <p>「このツールは本当に便利です。JSONの整形が簡単にできて、時間の節約になっています。」</p>
+                <p class="testimonial-author">- 山田太郎、ウェブ開発者</p>
+            </li>
+            <li class="testimonial-item">
+                <p>「使いやすくて、結果も正確。他のツールを探す必要がなくなりました。」</p>
+                <p class="testimonial-author">- 佐藤花子、データアナリスト</p>
+            </li>
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; 2024 JSON整形ツール. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let formattedJSON = '';
+
+        function formatJSON() {
+            const input = document.getElementById('input').value;
+            const result = document.getElementById('result');
+            const copyButton = document.getElementById('copyButton');
+            const message = document.getElementById('message');
+
+            try {
+                const parsed = JSON.parse(input);
+                formattedJSON = JSON.stringify(parsed, null, 2);
+                result.textContent = formattedJSON;
+                copyButton.disabled = false;
+                showMessage('JSONが正常に整形されました。', 'success');
+            } catch (error) {
+                result.textContent = '無効なJSONです: ' + error.message;
+                copyButton.disabled = true;
+                formattedJSON = '';
+                showMessage('JSONの整形に失敗しました。', 'error');
+            }
+        }
+
+        function copyResult() {
+            if (formattedJSON) {
+                navigator.clipboard.writeText(formattedJSON).then(() => {
+                    showMessage('整形されたJSONがクリップボードにコピーされました！', 'success');
+                }).catch(err => {
+                    console.error('クリップボードへのコピーに失敗しました', err);
+                    showMessage('クリップボードへのコピーに失敗しました。', 'error');
+                });
+            } else {
+                showMessage('コピーする整形済みJSONがありません。まず、JSONを整形してください。', 'error');
+            }
+        }
+
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = type;
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
